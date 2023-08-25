@@ -79,5 +79,4 @@ while(1):
     if key == ord('q'):
         break
 vid.release()
-
 cv2.destroyAllWindows()
