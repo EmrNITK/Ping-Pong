@@ -10,7 +10,6 @@ def ScoreCounter():
         nonlocal score, miss_count
         score = 0
         miss_count = 0
-        print("Restarting Game")
     def miss():
         nonlocal miss_count
         miss_count = miss_count + 1
