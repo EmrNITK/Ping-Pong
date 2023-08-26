@@ -62,7 +62,7 @@ class HandDetection():
 ######################  DRIVER CODE  #########################
 vid = cv2.VideoCapture(0);
 HandDetection = HandDetection()
-handDetection = HandDetection.create_trackbars()
+HandDetection.create_trackbars()
 while(1):
     _,frame = vid.read()
     frame = cv2.flip(frame,1)
