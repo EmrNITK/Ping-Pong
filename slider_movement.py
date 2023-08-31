@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+<<<<<<< Updated upstream
 
 def empty(a):
     pass
@@ -62,6 +63,9 @@ class HandDetection:
         except ZeroDivisionError:
             return (-1, -1)
         return (x, y)
+=======
+from hand_detection import HandDetection
+>>>>>>> Stashed changes
 
 # Initialize video capture
 vid = cv2.VideoCapture(0)
