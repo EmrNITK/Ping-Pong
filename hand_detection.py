@@ -59,31 +59,31 @@ class HandDetection():
             return (-1,-1) 
         return (x,y)
 
-######################  DRIVER CODE  #########################
-vid = cv2.VideoCapture(0);
-HandDetection = HandDetection()
-HandDetection.create_trackbars()
-while(1):
-    _,frame = vid.read()
-    frame = cv2.flip(frame,1)
-    fullScreenFrame=frame
-    frame = frame[:290, 290:] 
-    frame = cv2.GaussianBlur(frame,(3,3),0)
+######################  DRIVER CODE   #########################
+# vid = cv2.VideoCapture(0);
+# HandDetection = HandDetection()
+# HandDetection.create_trackbars()
+# while(1):
+#     _,frame = vid.read()
+#     frame = cv2.flip(frame,1)
+#     fullScreenFrame=frame
+#     frame = frame[:290, 290:] 
+#     frame = cv2.GaussianBlur(frame,(3,3),0)
 
-    mask = HandDetection.create_mask(frame)
-    threshImg = HandDetection.threshold(mask)
-    mask_cleaned = HandDetection.clean_image(threshImg)
-    contours = HandDetection.find_contours(mask_cleaned)
-    frame = cv2.drawContours(frame,contours,-1,(255,0,0),2) 
-    max_cntr = HandDetection.max_contour(contours) 
-    (centroid_x,centroid_y) = HandDetection.centroid(max_cntr) 
-    print(centroid_x,centroid_y)
-    cv2.imshow('video',frame)
-    cv2.imshow("mask",mask)
-    key = cv2.waitKey(10)
+#     mask = HandDetection.create_mask(frame)
+#     threshImg = HandDetection.threshold(mask)
+#     mask_cleaned = HandDetection.clean_image(threshImg)
+#     contours = HandDetection.find_contours(mask_cleaned)
+#     frame = cv2.drawContours(frame,contours,-1,(255,0,0),2) 
+#     max_cntr = HandDetection.max_contour(contours) 
+#     (centroid_x,centroid_y) = HandDetection.centroid(max_cntr) 
+#     print(centroid_x,centroid_y)
+#     cv2.imshow('video',frame)
+#     cv2.imshow("mask",mask)
+#     key = cv2.waitKey(10)
     
-    if key == ord('q'):
-        break
-vid.release()
+#     if key == ord('q'):
+#         break
+# vid.release()
 
-cv2.destroyAllWindows()
+# cv2.destroyAllWindows()
