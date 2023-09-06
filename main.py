@@ -10,44 +10,104 @@ hand_detection = HandDetection()
 hand_detection.create_trackbars()
 
 # Initialize slider variables
-slider_x = 100
-slider_y = 400  # Adjust the starting position to move it near the bottom
-slider_width = 150  # Increase the width to make it horizontal
-slider_height = 20  # Decrease the height for a horizontal slider
+WIDTH, HEIGHT = 700,500
+ball_radius = 15
+PADDLE_WIDTH, PADDLE_HEIGHT =  150,20 # Decrease the height for a horizontal slider
+WHITE = (255,255,255)
 slider_color = (0, 255, 0)
+    
+class Paddle:
+    COLOR = WHITE
+    VEL = 10
+    def __init__(self,x,y,width,height):
+        self.x =self.original_x =  x
+        self.y =self.original_y =  y
+        self.width = width
+        self.height = height
+    
+    def draw(self,frame):
+        cv2.rectangle(
+        frame,
+        (int(self.x - self.width // 2), int(HEIGHT - self.height)),
+        (int(self.x + self.width // 2), int(HEIGHT)),
+        (255, 255, 255),
+        -1,
+    )
+    
+    def move(self, frame,centroid_x):
+        self.x = centroid_x
 
-while vid.isOpened():
-    _, frame = vid.read()
-    frame = cv2.flip(frame, 1)
-    fullScreenFrame = frame
-    frame = frame[:500, :]
+    # Ensure the paddle stays within the frame boundaries
+        if self.x - self.width//2< 0:
+            self.x = self.width//2
+        if self.x + self.width//2 > WIDTH:
+            self.x = WIDTH - self.width//2
+        self.draw(frame)
+  
+    
+    def reset(self):
+        self.x = self. original_x
+        self.y = self.original_y
 
-    mask = hand_detection.create_mask(frame)
+class Ball:
+    MAX_VEL = 3
+    ball_color = WHITE
+    def __init__(self,x,y,radius):
+        self.x = self.original_x=x
+        self.y = self.original_y= y
+        self.radius = radius
+        self.x_vel = 0
+        self.y_vel =self.MAX_VEL
+    
+    def draw(self,canvas):
+        cv2.circle(canvas, (self.x,self.y), self.radius, (255, 255, 255), -1)
+    
+    def move(self):
+        self.x += self.x_vel
+        self.y += self.y_vel
+        
+    def reset(self):
+        self.x = self.original_x
+        self.y = self.original_y 
+        self.y_vel = 0
+        self.x_vel *= -1
 
-    threshImg = hand_detection.threshold(mask)
-    mask_cleaned = hand_detection.clean_image(threshImg)
-    contours = hand_detection.find_contours(mask_cleaned)
-    frame = cv2.drawContours(frame, contours, -1, (255, 0, 0), 2)
-    max_cntr = hand_detection.max_contour(contours)
-    (centroid_x, centroid_y) = hand_detection.centroid(max_cntr)
+#Function to draw pieces in the main function        
+def draw_pieces(frame,paddle,ball):
+    paddle.draw(frame)
+    ball.draw(frame)
+    
+    
+def main():
+    
+    paddle = Paddle(WIDTH//2,HEIGHT,PADDLE_WIDTH,PADDLE_HEIGHT)
+    ball = Ball(WIDTH//2,HEIGHT//2,ball_radius)
+    while vid.isOpened():
+        _, frame = vid.read()
+        frame = cv2.flip(frame, 1)
+        frame = cv2.resize(frame,(WIDTH,HEIGHT))
+        mask = hand_detection.create_mask(frame)
+        threshImg = hand_detection.threshold(mask)
+        mask_cleaned = hand_detection.clean_image(threshImg)
+        contours = hand_detection.find_contours(mask_cleaned)
+        frame = cv2.drawContours(frame, contours, -1, (255, 0, 0), 2)
+        max_cntr = hand_detection.max_contour(contours)
+        (centroid_x, centroid_y) = hand_detection.centroid(max_cntr)
+        frame = cv2.circle(frame, (centroid_x, centroid_y), 5, (255, 255, 0),
+                           -1)
+        paddle.move(frame,centroid_x)
+        ball.move()
+        draw_pieces(frame,paddle,ball)
+        # print(centroid_x, centroid_y)
+        cv2.imshow('Hand Gesture Slider', frame)
 
-    # Update the slider's position based on the centroid_x value
-    slider_x = int((centroid_x / frame.shape[1]) * (frame.shape[1] - slider_width))  # Scale centroid_x for horizontal slider
-    if slider_x < 0:
-        slider_x = 0
-    if slider_x + slider_width > frame.shape[1]:
-        slider_x = frame.shape[1] - slider_width
+        key = cv2.waitKey(10)
 
-    cv2.rectangle(frame, (slider_x, slider_y), (slider_x + slider_width, slider_y + slider_height), slider_color, -1)
+        if key == ord('q'):
+            break
 
-    print(centroid_x, centroid_y)
-    cv2.imshow('Hand Gesture Slider', frame)
-
-    key = cv2.waitKey(10)
-
-    if key == ord('q'):
-        break
-
-# Release the video capture and close all OpenCV windows
-vid.release()
-cv2.destroyAllWindows()
+    # Release the video capture and close all OpenCV windows
+    vid.release()
+    cv2.destroyAllWindows()
+if __name__ == '__main__':
+    main()
