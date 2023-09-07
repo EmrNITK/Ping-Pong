@@ -71,7 +71,9 @@ class Ball:
         self.y = self.original_y 
         self.y_vel = 0
         self.x_vel *= -1
-
+        
+def collision(ball, paddle):
+    pass 
 #Function to draw pieces in the main function        
 def draw_pieces(frame,paddle,ball):
     paddle.draw(frame)
@@ -98,6 +100,7 @@ def main():
         paddle.move(frame,centroid_x)
         ball.move()
         draw_pieces(frame,paddle,ball)
+        #handle collision function here 
         # print(centroid_x, centroid_y)
         cv2.imshow('Hand Gesture Slider', frame)
 
