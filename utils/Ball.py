@@ -1,5 +1,6 @@
 import cv2
 
+
 class Ball:
     def __init__(self, x, y, radius, MAX_VEL, ball_color):
         self.x = self.original_x = x
@@ -21,5 +22,5 @@ class Ball:
     def reset(self):
         self.x = self.original_x
         self.y = self.original_y
-        self.y_vel = 0
-        self.x_vel *= -1
+        self.x_vel = self.MAX_VEL
+        self.y_vel = -1*self.MAX_VEL
