@@ -1,5 +1,6 @@
 from utils.constants import WIDTH, speed_increment
 
+
 def collision(ball, paddle):
     # Collision with side edges
     if ball.x - ball.radius <= 0 or ball.x + ball.radius >= WIDTH:
