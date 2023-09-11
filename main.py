@@ -104,7 +104,6 @@ def draw_pieces(frame, paddle, ball):
     paddle.draw(frame)
     ball.draw(frame)
 
-
 def main():
 
     paddle = Paddle(WIDTH//2, HEIGHT, PADDLE_WIDTH, PADDLE_HEIGHT)
