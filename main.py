@@ -53,18 +53,19 @@ class Paddle:
 
 
 class Ball:
-    MAX_VEL = 3
+    MAX_VEL = 5
     ball_color = WHITE
 
     def __init__(self, x, y, radius):
         self.x = self.original_x = x
         self.y = self.original_y = y
         self.radius = radius
-        self.x_vel = 0
-        self.y_vel = self.MAX_VEL
+        self.x_vel = 3
+        self.y_vel = -3
 
     def draw(self, canvas):
-        cv2.circle(canvas, (self.x, self.y), self.radius, (255, 255, 255), -1)
+        cv2.circle(canvas, (int(self.x), int(self.y)),
+                   self.radius, (255, 255, 255), -1)
 
     def move(self):
         self.x += self.x_vel
@@ -78,8 +79,24 @@ class Ball:
 
 
 def collision(ball, paddle):
+    # Collision with side edges
+    if ball.x - ball.radius <= 0 or ball.x + ball.radius >= 700:
+        ball.x_vel = -ball.x_vel
 
-    pass
+    # Collision with top edge
+    if ball.y - ball.radius <= 0:
+        ball.y_vel = -ball.y_vel
+
+    # Collision with the slider
+    if (
+        ball.y + ball.radius >= paddle.y - paddle.height and
+        ball.x + ball.radius >= paddle.x - paddle.width // 2 and
+        ball.x - ball.radius <= paddle.x + paddle.width // 2
+    ):
+        ball.y_vel = -ball.y_vel
+        # Increase the ball's speed
+        ball.x_vel *= 1.3
+        ball.y_vel *= 1.3
 
 
 # Function to draw pieces in the main function
@@ -109,6 +126,7 @@ def main():
         ball.move()
         draw_pieces(frame, paddle, ball)
         # handle collision function here
+        collision(ball, paddle)
         # print(centroid_x, centroid_y)
         cv2.imshow('Hand Gesture Slider', frame)
 
