@@ -21,5 +21,5 @@ class Ball:
     def reset(self):
         self.x = self.original_x
         self.y = self.original_y
-        self.y_vel = 0
-        self.x_vel *= -1
+        self.x_vel = self.MAX_VEL
+        self.y_vel = -1*self.MAX_VEL
